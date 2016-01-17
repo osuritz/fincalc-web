@@ -1,0 +1,279 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>FinCalcs</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <style>
+            body {
+                padding-top: 50px;
+                padding-bottom: 20px;
+
+                background-color: #fafafa;
+            }
+
+            .md-card {
+              background-color: white;
+              border-radius: 2px;
+              box-sizing: border-box;
+              display: -webkit-flex;
+              display: -ms-flexbox;
+              display: flex;
+              -webkit-flex-direction: column;
+              -ms-flex-direction: column;
+              flex-direction: column;
+              margin: 8px;
+              box-shadow: 0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12);
+            }
+
+            .md-card-content {
+              display: block;
+              padding: 16px;
+            }
+
+            .future-value-form {
+              /*display: flex;
+              flex-direction: row;*/
+            }
+
+            .starting-amount {
+              /*min-width: 115px;*/
+            }
+
+            .starting-amount input {
+              width: 100px;
+            }
+
+            .assumption-group.starting-amount,
+            .assumption-group.rate-of-return {
+              width: 175px;
+            }
+
+            .assumption-group.invest-growth {
+              width: 120px;
+            }
+
+            .md-card.future-worth {
+              font-size: 16px;
+              font-weight: 500;
+              line-height: 18px;
+            }
+
+            .investment-worth,
+            .investment-worth-amount {
+              color: #2196f3;
+              font-size: 28px;
+              font-weight: normal;
+              vertical-align: middle;
+            }
+
+            .investment-table {
+              font-weight: 200;
+            }
+
+            .investment-table th {
+              font-weight: 500;
+            }
+
+            /*.investment-table tbody>tr>td,
+            .investment-table tbody>tr>th {
+              padding-bottom: 6px;
+            }*/
+
+            .investment-table td {
+              width: 15%;
+            }
+
+            .investment-table td:first-child {
+              width: 10%;
+            }
+        </style>
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="css/main.css">
+
+        <!--[if lt IE 9]>
+            <script src="js/vendor/html5-3.6-respond-1.4.2.min.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+        <!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">Financial Calculators</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div>
+        <h2>Investment Calculator</h2>
+        <p>Future Value of Investments Calculator – Use this calculator to determine how your savings will grow over time.</p>
+      </div>
+
+      <form class="future-value-form">
+        <div class="assumption-group starting-amount invest-seed">
+          <label for="starting-amount">Starting Amount</label>
+          <div class="input-group">
+            <span class="input-group-addon">$</span>
+            <input type="number" class="form-control" aria-label="Amount (to the nearest dollar)" id="starting-amount" value="5000">
+            <span class="input-group-addon">.00</span>
+          </div>
+        </div>
+
+        <div class="assumption-group invest-contributions">
+          <label for="">Regular Contributions</label>
+          <div class="input-group">
+            <span class="input-group-addon">$</span>
+            <input type="number" class="form-control" value="100" aria-label="Amount (to the nearest dollar)">
+            <span class="input-group-addon">.00</span>
+          </div>
+          <select class="form-control">
+            <option value="52">Weekly</option>
+            <option value="26">Bi-Weekly</option>
+            <option value="12">Monthly</option>
+            <option value="2">Semi-Annually</option>
+            <option value="1" selected>Annually</option>
+          </select>
+        </div>
+
+        <div class="assumption-group rate-of-return">
+          <label for=""
+                 data-toggle="tooltip"
+                 data-placement="top"
+                 title="The rate at which your investments will grow">
+                 Rate of Return
+          </label>
+          <div class="input-group">
+            <input type="number" class="form-control" value="4.00" aria-label="">
+            <span class="input-group-addon">%</span>
+          </div>
+        </div>
+
+        <div class="assumption-group invest-growth">
+          <label for="">Years to Grow</label>
+          <input type="number" class="form-control" value="10" aria-label="">
+        </div>
+      </form>
+
+      <div class="md-card future-worth">
+        <div class="md-card-content">
+          This investment will be worth:
+          <span class="investment-worth">$</span><span class="investment-worth-amount"></span>
+        </div>
+      </div>
+
+      <div class="md-card">
+        <h2>[Graphs come here]</h2>
+      </div>
+
+      <div class="md-card">
+        <div class="investment-table"></div>
+      </div>
+
+
+      <hr>
+
+      <footer>
+        <p>&copy; Oli 2016</p>
+      </footer>
+    </div> <!-- /container -->        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
+
+        <script src="js/vendor/bootstrap.min.js"></script>
+
+        <script>
+          (function () {
+
+            function formatCurrency(value, currencySymbol) {
+              if (currencySymbol === '€') {
+                return value.toLocaleString() + ' €';
+              }
+
+              return currencySymbol + value.toLocaleString();
+            }
+
+            function renderAnnualValues(annualValues, startYear, currency) {
+              currency = currency || '$';
+
+              var headerRow =
+              '<tr><th>Year</th><th>Starting Amount</th><th>Annual Contributions</th><th>Total Contributions</th><th>Interest Earned</th><th>Total Interest Earned</th><th>End Balance</th></tr>';
+
+              var table = $('<table class="table investment-breakdown"/>')
+                .append(headerRow);
+
+              var i = 0;
+              for (i=0; i < annualValues.length; i += 1) {
+                var currentYear = annualValues[i];
+                var row = $('<tr/>');
+
+                row
+                    .append('<td>' + (startYear + i) + '</td>')
+                    .append('<td>' + formatCurrency(currentYear.startingAmount, currency) + '</td>')
+                    .append('<td>' + formatCurrency(currentYear.annualContribution, currency) + '</td>')
+                    .append('<td>' + formatCurrency(currentYear.totalContributions, currency) + '</td>')
+                    .append('<td>' + formatCurrency(currentYear.interestEarned, currency) + '</td>')
+                    .append('<td>' + formatCurrency(currentYear.totalInterestEarned, currency) + '</td>')
+                    .append('<td>' + formatCurrency(currentYear.endBalance, currency) + '</td>');
+
+                table.append(row);
+              }
+
+              return table;
+            }
+
+            function onFormUpdate(evt) {
+                var startingAmount = parseInt(
+                    $('.assumption-group.invest-seed input').val(),
+                    10);
+
+                var contributions = parseInt(
+                    $('.assumption-group.invest-contributions input').val(),
+                    10);
+
+                var periodsPerYear = parseInt(
+                    $('.assumption-group.invest-contributions select').val(),
+                    10);
+
+                var rateOfReturn = parseFloat(
+                    $('.assumption-group.rate-of-return input').val(),
+                    10) / 100;
+                var numberOfYears = parseInt(
+                    $('.assumption-group.invest-growth input').val(),
+                    10);
+                
+                var calc = new InvestmentReturnsCalculator();
+                
+                var futureValue = calc.computeFutureValuesOfContributions(startingAmount, contributions, periodsPerYear, rateOfReturn, numberOfYears);
+                $('.investment-worth-amount').text(futureValue.toLocaleString());
+
+                var futureAnnualValues = calc.computeAnnualizedFutureValuesOfContributions(startingAmount, contributions, periodsPerYear, rateOfReturn, numberOfYears);
+                $('.investment-table').html(
+                    renderAnnualValues(futureAnnualValues, 2016)
+                    .addClass('table-condensed table-striped')
+                );
+            }
+
+            $('.future-value-form input, .future-value-form select').on('change', onFormUpdate);
+
+            // Bootstrap
+            $(function () {
+              // Enable tooltips
+              $('[data-toggle="tooltip"]').tooltip();
+
+              onFormUpdate();
+            });
+
+
+          }());
+        </script>
+        <script src="app.js"></script>
+    </body>
+</html>
